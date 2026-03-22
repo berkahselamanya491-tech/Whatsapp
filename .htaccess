@@ -1,0 +1,15 @@
+# Proteksi file log dari akses publik
+<Files "results.txt">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.php">
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+# Enable HTTPS redirect (kalo pake hosting)
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
